@@ -31,8 +31,8 @@ class GameOfLife
             @grid[i].fill(0)
         end
 
-        for row in 0...@rows
-            for col in 0...@cols
+        for row in 0...@rows do
+            for col in 0...@cols do
                 @grid[row][col] = tokens.shift.to_i
             end
         end
@@ -43,14 +43,36 @@ class GameOfLife
     def saveGrid(file)
         data = @rows.to_s + ' ' + @cols.to_s
 
-        for row in 0...@rows
-            for col in 0...@cols
+        for row in 0...@rows do
+            for col in 0...@cols do
                 data += ' ' + @grid[row][col].to_s
             end
         end
 
         data += "\n"
         IO.write(file, data)
+    end
+
+    def newMod(a, b)
+        newNum = a % b
+
+        if (newNum < 0)
+            newNum += b
+        end
+
+        return newNum
+    end
+
+    def DecideCellFate(row, col, neighbors) 
+        if (@grid[row][col] == 1 && (neighbors < 2 || neighbors > 3))
+            return 0
+        elsif (@grid[row][col] == 1 && (neighbors == 2 || neighbors == 3))
+            return 1
+        elsif (@grid[row][col] == 0 && neighbors == 3)
+            return 1
+        else
+            return @grid[row][col]
+        end
     end
 
     # Mutates the grid to next generation
@@ -62,9 +84,11 @@ class GameOfLife
             temp[i].fill(0)
         end
 
-        #
-        # TO DO: set values in temp grid to next generation
-        # 
+       for row in 0...@rows do
+           for col in 0...@cols do
+               temp[row][col] = DecideCellFate(row, col, getNeighbors(row, col))
+           end
+       end
 
         # DO NOE DELETE: set @grid to temp grid
         @grid = temp
@@ -74,9 +98,31 @@ class GameOfLife
     def getNeighbors(i, j)
         neighbors = 0
 
-        #
-        # TO DO: determine number of neighbors of cell at @grid[i][j]
-        #
+        
+		if (@grid[newMod(i - 1, @rows)][j] == 1) 
+            neighbors += 1
+        end
+		if (@grid[newMod(i + 1, @rows)][j] == 1)
+            neighbors += 1
+        end
+		if (@grid[i][newMod(j - 1, @cols)] == 1)
+            neighbors += 1
+        end
+		if (@grid[i][newMod(j + 1, @cols)] == 1)
+            neighbors += 1
+        end
+		if (@grid[newMod(i - 1, @rows)][newMod(j + 1, @cols)] == 1)
+            neighbors += 1
+        end
+		if (@grid[newMod(i + 1, @rows)][newMod(j + 1, @cols)] == 1)
+            neighbors += 1
+        end
+		if (@grid[newMod(i + 1, @rows)][newMod(j - 1, @cols)] == 1)
+            neighbors += 1
+        end
+		if (@grid[newMod(i - 1, @rows)][newMod(j - 1, @cols)] == 1) 
+            neighbors += 1
+        end
 
         # DO NOT DELETE THE LINE BELOW
         neighbors
