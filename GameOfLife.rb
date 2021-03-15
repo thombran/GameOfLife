@@ -25,18 +25,29 @@ class GameOfLife
         @rows = tokens.shift.to_i
         @cols = tokens.shift.to_i
 
-        #
-        # TO DO: setup @grid as array of arrays and fill it with values from the tokens array
-        #
+        @grid = Array.new(@rows)
+        for i in (0...@cols)
+            @grid[i] = Array.new(@rows)
+            @grid[i].fill(0)
+        end
+
+        for row in 0...@rows
+            for col in 0...@cols
+                @grid[row][col] = tokens.shift.to_i
+            end
+        end
+
     end
 
     # Saves the current grid values to the file specified
     def saveGrid(file)
         data = @rows.to_s + ' ' + @cols.to_s
 
-        #
-        # TO DO: append the values in @grid to data
-        #
+        for row in 0...@rows
+            for col in 0...@cols
+                data += ' ' + @grid[row][col].to_s
+            end
+        end
 
         data += "\n"
         IO.write(file, data)
