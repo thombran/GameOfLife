@@ -1,7 +1,7 @@
 #
 #  Game of Life class
 #
-#  Author(s): Your Name(s)
+#  Author(s): Brandon Thomas
 #
 class GameOfLife
 
